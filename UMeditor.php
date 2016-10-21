@@ -37,12 +37,8 @@ class UMeditor extends InputWidget
         if (!isset ($this->options ['id'])) {
             $this->options ['id'] = $this->getId();
         }
-
         $this->clientOptions = array_merge([
-            'width' => "100%",
-            'height' => 380,
-            'watch' => false,
-            'autoFocus' => false
+            'autoHeightEnabled' => true,
         ], $this->clientOptions);
     }
 
@@ -52,18 +48,14 @@ class UMeditor extends InputWidget
     public function run()
     {
         if ($this->hasModel()) {
-            $textarea = Html::activeTextArea($this->model, $this->attribute, $this->options);
+            echo Html::activeTextArea($this->model, $this->attribute, $this->options);
         } else {
-            $textarea = Html::textArea($this->name, $this->value, $this->options);
+            echo Html::textArea($this->name, $this->value, $this->options);
         }
         UMeditorAsset::register($this->view);
         $options = empty ($this->clientOptions) ? '' : Json::htmlEncode($this->clientOptions);
         $varName = Inflector::classify('editor' . $this->id);
-        $this->view->registerJs("var um{$this->id} = UM.getEditor(\"{$varName}\", {$options});");
-        echo Html::tag('script', '', [
-            'id' => $varName,
-            'name'=>'',
-            'type' => 'text/plain',
-        ]);
+        $this->view->registerJs("var {$this->id} = UM.getEditor(\"{$this->options['id']}\", {$options});");
+
     }
 }
