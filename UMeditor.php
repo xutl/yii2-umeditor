@@ -14,7 +14,7 @@ use yii\web\JsExpression;
 use yii\widgets\InputWidget;
 
 /**
- * Class MarkdownEditor
+ * Class UMeditor
  * @package xutl\editormd
  */
 class UMeditor extends InputWidget
@@ -29,7 +29,7 @@ class UMeditor extends InputWidget
 
     /**
      * {@inheritDoc}
-     * @see \Leaps\Base\Object::init()
+     * @see \yii\base\Object::init()
      */
     public function init()
     {

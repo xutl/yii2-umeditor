@@ -10,7 +10,7 @@ use Yii;
 use yii\web\AssetBundle;
 
 /**
- * Class MarkdownEditorAsset
+ * Class UMeditorAsset
  * @package xutl\editormd
  */
 class UMeditorAsset extends AssetBundle
