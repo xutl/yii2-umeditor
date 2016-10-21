@@ -13,7 +13,7 @@ use yii\web\AssetBundle;
  * Class MarkdownEditorAsset
  * @package xutl\editormd
  */
-class UMeditor extends AssetBundle
+class UMeditorAsset extends AssetBundle
 {
     public $sourcePath = '@vendor/xutl/yii2-umeditor-widget/assets';
 
