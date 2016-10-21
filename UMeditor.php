@@ -39,6 +39,8 @@ class UMeditor extends InputWidget
         }
         $this->clientOptions = array_merge([
             'autoHeightEnabled' => true,
+            'initialFrameWidth' => '100%',
+            'initialFrameHeight' => '300',
         ], $this->clientOptions);
     }
 

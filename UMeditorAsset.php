@@ -23,7 +23,7 @@ class UMeditorAsset extends AssetBundle
 
     public $js = [
         'umeditor.config.js',
-        'umeditor.min.js',
+        'umeditor.js',
     ];
 
     public $depends = [
