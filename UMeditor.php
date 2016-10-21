@@ -56,7 +56,6 @@ class UMeditor extends InputWidget
         }
         UMeditorAsset::register($this->view);
         $options = empty ($this->clientOptions) ? '' : Json::htmlEncode($this->clientOptions);
-        $varName = Inflector::classify('editor' . $this->id);
         $this->view->registerJs("var {$this->id} = UM.getEditor(\"{$this->options['id']}\", {$options});");
 
     }
