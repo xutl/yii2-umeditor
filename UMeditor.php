@@ -41,6 +41,7 @@ class UMeditor extends InputWidget
             'autoHeightEnabled' => true,
             'initialFrameWidth' => '100%',
             'initialFrameHeight' => '300',
+            'lang' => Yii::$app->language == 'zh-CN' ? 'zh-cn' : 'en',
         ], $this->clientOptions);
     }
 
