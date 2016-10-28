@@ -42,6 +42,7 @@ class UMeditor extends InputWidget
             'initialFrameWidth' => '100%',
             'initialFrameHeight' => '300',
             'emotionLocalization' => true,
+            'imagePath' => '',
             'lang' => Yii::$app->language == 'zh-CN' ? 'zh-cn' : 'en',
         ], $this->clientOptions);
     }

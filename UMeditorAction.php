@@ -9,6 +9,7 @@ namespace xutl\umeditor;
 use Yii;
 use yii\base\Action;
 use yii\web\Response;
+use yii\helpers\Json;
 use yii\web\UploadedFile;
 use yii\validators\FileValidator;
 
@@ -75,46 +76,32 @@ class UMeditorAction extends Action
             'checkExtensionByMimeType' => false,
             //"maxSize" => $this->options['scrawlMaxSize'],
         ]);
-        if ($validator->validate($uploadedFile, $error)) {
-
-        }
-        $result = [];
-
-        if (is_null($callback)) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return $result;
+        if (!$validator->validate($uploadedFile, $error)) {
+            $result = [
+                'state' => $error,
+            ];
         } else {
-            Yii::$app->response->format = Response::FORMAT_JSONP;
-            return ['callback' => $callback, 'data' => $result];
-        }
-
-
-        $filename = $this->getUnusedPath($this->tempPath . DIRECTORY_SEPARATOR . $uploadedFile->name);
-
-        //背景保存在临时目录中
-        $config["savePath"] = $Path;
-        $up = new Uploader("upfile", $config);
-        $type = $_REQUEST['type'];
-        $callback = $_GET['callback'];
-
-        $info = $up->getFileInfo();
-
-
-
-
-
-
-        $isUploadComplete = ChunkUploader::process($uploadedFile, $filename);
-        if ($isUploadComplete) {
             if ($this->onComplete) {
-                return call_user_func($this->onComplete, $filename, $params);
+                $result = call_user_func($this->onComplete, $uploadedFile->tempName, $params);
+                $result = ['url' => 'http://codeforge.l68.net/img/logo.png'];
+                $result = [
+                    "originalName" => $uploadedFile->name,
+                    "name" => basename($result['url']),
+                    "url" => $result['url'],
+                    "size" => $uploadedFile->size,
+                    "type" => '.' . $uploadedFile->extension,
+                    "state" => 'SUCCESS'
+                ];
             } else {
-                return [
-                    'filename' => $filename,
-                    'params' => $params,
+                $result = [
+                    "state" => Yii::t('app', 'File save failed'),
                 ];
             }
         }
-        return null;
+        if (is_null($callback)) {
+            echo Json::encode($result);
+        } else {
+            echo '<script>'.$callback.'('.Json::encode($result).')</script>';
+        }
     }
 }
