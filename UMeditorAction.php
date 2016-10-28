@@ -24,27 +24,6 @@ class UMeditorAction extends Action
     public $inputName = 'upfile';
 
     /**
-     * @var string the directory to store temporary files during conversion. You may use path alias here.
-     * If not set, it will use the "plupload" subdirectory under the application runtime path.
-     */
-    public $tempPath = '@runtime/umeditor';
-
-    /**
-     * @var integer the permission to be set for newly created cache files.
-     * This value will be used by PHP chmod() function. No umask will be applied.
-     * If not set, the permission will be determined by the current environment.
-     */
-    public $fileMode;
-
-    /**
-     * @var integer the permission to be set for newly created directories.
-     * This value will be used by PHP chmod() function. No umask will be applied.
-     * Defaults to 0775, meaning the directory is read-writable by owner and group,
-     * but read-only for other users.
-     */
-    public $dirMode = 0775;
-
-    /**
      * @var callable success callback with signature: `function($filename, $params)`
      */
     public $onComplete;
@@ -56,10 +35,6 @@ class UMeditorAction extends Action
     {
         parent::init();
         $this->controller->enableCsrfValidation = false;
-        $this->tempPath = Yii::getAlias($this->tempPath);
-        if (!is_dir($this->tempPath)) {
-            FileHelper::createDirectory($this->tempPath, $this->dirMode, true);
-        }
     }
 
     /**
