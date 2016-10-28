@@ -8,6 +8,9 @@ namespace xutl\umeditor;
 
 use Yii;
 use yii\base\Action;
+use yii\web\Response;
+use yii\web\UploadedFile;
+use yii\validators\FileValidator;
 
 /**
  * UMeditorAction class file.
@@ -51,7 +54,7 @@ class UMeditorAction extends Action
     public function init()
     {
         parent::init();
-        Yii::$app->response->format = Response::FORMAT_JSON;
+        $this->controller->enableCsrfValidation = false;
         $this->tempPath = Yii::getAlias($this->tempPath);
         if (!is_dir($this->tempPath)) {
             FileHelper::createDirectory($this->tempPath, $this->dirMode, true);
@@ -63,11 +66,44 @@ class UMeditorAction extends Action
      * This method displays the view requested by the user.
      * @throws HttpException if the view is invalid
      */
-    public function run()
+    public function run($callback = null)
     {
         $uploadedFile = UploadedFile::getInstanceByName($this->inputName);
         $params = Yii::$app->request->getBodyParams();
+        $validator = new FileValidator([
+            //'extensions' => $this->imageAllowFiles,
+            'checkExtensionByMimeType' => false,
+            //"maxSize" => $this->options['scrawlMaxSize'],
+        ]);
+        if ($validator->validate($uploadedFile, $error)) {
+
+        }
+        $result = [];
+
+        if (is_null($callback)) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return $result;
+        } else {
+            Yii::$app->response->format = Response::FORMAT_JSONP;
+            return ['callback' => $callback, 'data' => $result];
+        }
+
+
         $filename = $this->getUnusedPath($this->tempPath . DIRECTORY_SEPARATOR . $uploadedFile->name);
+
+        //背景保存在临时目录中
+        $config["savePath"] = $Path;
+        $up = new Uploader("upfile", $config);
+        $type = $_REQUEST['type'];
+        $callback = $_GET['callback'];
+
+        $info = $up->getFileInfo();
+
+
+
+
+
+
         $isUploadComplete = ChunkUploader::process($uploadedFile, $filename);
         if ($isUploadComplete) {
             if ($this->onComplete) {
