@@ -93,8 +93,7 @@ class UMeditorAction extends Action
                 'state' => $error,
             ];
         } else {
-            if ($this->onComplete) {
-                $url = call_user_func($this->onComplete, $uploadedFile, $params);
+            if ($this->onComplete && ($url = call_user_func($this->onComplete, $uploadedFile, $params)) != false) {
                 $result = [
                     "originalName" => $uploadedFile->name,
                     "name" => basename($url),
