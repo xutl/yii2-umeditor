@@ -63,6 +63,17 @@ class UMeditorAction extends Action
     }
 
     /**
+     * @return int the max upload size in MB
+     */
+    public static function getPHPMaxUploadSize()
+    {
+        $max_upload = (int)(ini_get('upload_max_filesize'));
+        $max_post = (int)(ini_get('post_max_size'));
+        $memory_limit = (int)(ini_get('memory_limit'));
+        return min($max_upload, $max_post, $memory_limit);
+    }
+
+    /**
      * Runs the action.
      * This method displays the view requested by the user.
      * @throws HttpException if the view is invalid
@@ -72,9 +83,10 @@ class UMeditorAction extends Action
         $uploadedFile = UploadedFile::getInstanceByName($this->inputName);
         $params = Yii::$app->request->getBodyParams();
         $validator = new FileValidator([
-            //'extensions' => $this->imageAllowFiles,
-            'checkExtensionByMimeType' => false,
-            //"maxSize" => $this->options['scrawlMaxSize'],
+            'extensions' => 'gif, jpg, jpeg, png, bmp',
+            'checkExtensionByMimeType' => true,
+            'mimeTypes' => 'image/*',
+            "maxSize" => static::getPHPMaxUploadSize() * 1048576,
         ]);
         if (!$validator->validate($uploadedFile, $error)) {
             $result = [
@@ -82,12 +94,11 @@ class UMeditorAction extends Action
             ];
         } else {
             if ($this->onComplete) {
-                $result = call_user_func($this->onComplete, $uploadedFile->tempName, $params);
-                $result = ['url' => 'http://codeforge.l68.net/img/logo.png'];
+                $funcResult = call_user_func($this->onComplete, $uploadedFile->tempName, $params);
                 $result = [
                     "originalName" => $uploadedFile->name,
-                    "name" => basename($result['url']),
-                    "url" => $result['url'],
+                    "name" => basename($funcResult['url']),
+                    "url" => $funcResult['url'],
                     "size" => $uploadedFile->size,
                     "type" => '.' . $uploadedFile->extension,
                     "state" => 'SUCCESS'
@@ -101,7 +112,7 @@ class UMeditorAction extends Action
         if (is_null($callback)) {
             echo Json::encode($result);
         } else {
-            echo '<script>'.$callback.'('.Json::encode($result).')</script>';
+            echo '<script>' . $callback . '(' . Json::encode($result) . ')</script>';
         }
     }
 }
