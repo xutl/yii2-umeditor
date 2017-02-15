@@ -9,7 +9,7 @@ namespace xutl\umeditor;
 use Yii;
 use yii\helpers\Json;
 use yii\helpers\Html;
-use yii\helpers\Inflector;
+use yii\helpers\Url;
 use yii\web\JsExpression;
 use yii\widgets\InputWidget;
 
@@ -41,8 +41,8 @@ class UMeditor extends InputWidget
             'autoHeightEnabled' => true,
             'initialFrameWidth' => '100%',
             'initialFrameHeight' => '300',
-            'emotionLocalization' => true,
             'imagePath' => '',
+            'imageUrl' => Url::to(['um-upload']),
             'lang' => Yii::$app->language == 'zh-CN' ? 'zh-cn' : 'en',
         ], $this->clientOptions);
     }

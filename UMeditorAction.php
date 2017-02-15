@@ -8,13 +8,13 @@ namespace xutl\umeditor;
 
 use Yii;
 use yii\base\Action;
-use yii\web\Response;
 use yii\helpers\Json;
 use yii\web\UploadedFile;
 use yii\validators\FileValidator;
 
 /**
- * UMeditorAction class file.
+ * Class UMeditor
+ * @package xutl\editormd
  */
 class UMeditorAction extends Action
 {
@@ -51,7 +51,7 @@ class UMeditorAction extends Action
     /**
      * Runs the action.
      * This method displays the view requested by the user.
-     * @throws HttpException if the view is invalid
+     * @param null $callback
      */
     public function run($callback = null)
     {
@@ -63,6 +63,7 @@ class UMeditorAction extends Action
             'mimeTypes' => 'image/*',
             "maxSize" => static::getPHPMaxUploadSize() * 1048576,
         ]);
+        $error = null;
         if (!$validator->validate($uploadedFile, $error)) {
             $result = [
                 'state' => $error,
