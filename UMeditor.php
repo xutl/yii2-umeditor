@@ -42,7 +42,7 @@ class UMeditor extends InputWidget
             'initialFrameWidth' => '100%',
             'initialFrameHeight' => '300',
             'imagePath' => '',
-            'imageUrl' => Url::to(['um-upload']),
+            'imageUrl' => Url::to(['/attachment/upload/um-upload']),
             'lang' => Yii::$app->language == 'zh-CN' ? 'zh-cn' : 'en',
         ], $this->clientOptions);
     }
